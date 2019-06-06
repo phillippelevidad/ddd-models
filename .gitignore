@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/ShoppingCart/Tests/bin/Debug/netcoreapp2.1
+/ShoppingCart/Tests/obj
+/ShoppingCart/ShoppingCart/obj
+/ShoppingCart/ShoppingCart/bin/Debug/netstandard2.0
+/Core/obj
+/Core/bin/Debug/netstandard2.0
+/.vs/DddModels/v16
