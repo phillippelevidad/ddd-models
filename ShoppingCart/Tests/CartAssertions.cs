@@ -89,6 +89,7 @@ namespace PlaygroundTests
             var cart = new Cart(customerId);
             var item = Product.Of("6af4d241", 10);
 
+            cart.Add(item, Quantity.Of(1));
             Action violation = () => cart.CloseForCheckout();
 
             violation.Should().Throw<Exception>();
