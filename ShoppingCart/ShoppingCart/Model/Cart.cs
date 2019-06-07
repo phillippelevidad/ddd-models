@@ -66,6 +66,22 @@ namespace ShoppingCart.Model
                 existing = existing.Remove(quantity);
         }
 
+        public Result CanCloseForCheckout()
+        {
+            if (TotalAmount < 50m)
+                return Result.Fail("The total amount should be at least 50 dollars in order to proceed to checkout.");
+
+            return Result.Ok();
+        }
+
+        public void CloseForCheckout()
+        {
+            CanCloseForCheckout()
+                .OnFailure(error => throw new Exception(error));
+
+            AddDomainEvent(new CartClosedForCheckout(this));
+        }
+
         public override string ToString()
         {
             return $"{CustomerId}, Items {items.Count}, Total {TotalAmount}";

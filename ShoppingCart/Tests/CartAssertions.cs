@@ -81,5 +81,30 @@ namespace PlaygroundTests
 
             cart.Items.Count.Should().Be(0);
         }
+
+        [Fact]
+        public void CannotCloseCartUnder50Dollars()
+        {
+            var customerId = new EntityId();
+            var cart = new Cart(customerId);
+            var item = Product.Of("6af4d241", 10);
+
+            Action violation = () => cart.CloseForCheckout();
+
+            violation.Should().Throw<Exception>();
+        }
+
+        [Fact]
+        public void CloseCartAbove50DollarsWorks()
+        {
+            var customerId = new EntityId();
+            var cart = new Cart(customerId);
+            var item = Product.Of("6af4d241", 30);
+
+            cart.Add(item, Quantity.Of(2));
+            cart.CloseForCheckout();
+
+            cart.DomainEvents.Should().ContainItemsAssignableTo<CartClosedForCheckout>();
+        }
     }
 }
