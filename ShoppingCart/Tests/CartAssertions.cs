@@ -15,17 +15,14 @@ namespace PlaygroundTests
         [Fact]
         public void CanStartNewCartForCustomer()
         {
-            var customerId = new EntityId();
-            var cart = new Cart(customerId);
-
+            var cart = StartCartForCustomer();
             cart.Should().NotBeNull();
         }
 
         [Fact]
         public void CanAddItemToCart()
         {
-            var customerId = new EntityId();
-            var cart = new Cart(customerId);
+            var cart = StartCartForCustomer();
 
             cart.Add(Product.Of(skuChewingGum, 10), Quantity.Of(1));
 
@@ -35,8 +32,7 @@ namespace PlaygroundTests
         [Fact]
         public void WhenProductThatExistsInCartIsAddedAgainShouldIncreaseQuantity()
         {
-            var customerId = new EntityId();
-            var cart = new Cart(customerId);
+            var cart = StartCartForCustomer();
 
             cart.Add(Product.Of(skuChewingGum, 10), Quantity.Of(1));
             cart.Add(Product.Of(skuChewingGum, 10), Quantity.Of(1));
@@ -48,8 +44,7 @@ namespace PlaygroundTests
         [Fact]
         public void CannotAddMoreThen10UnitsOfEachProduct()
         {
-            var customerId = new EntityId();
-            var cart = new Cart(customerId);
+            var cart = StartCartForCustomer();
 
             cart.Add(Product.Of(skuChewingGum, 10), Quantity.Of(8));
 
@@ -63,8 +58,7 @@ namespace PlaygroundTests
         [Fact]
         public void CartTotalIsCorrectlyCalculated()
         {
-            var customerId = new EntityId();
-            var cart = new Cart(customerId);
+            var cart = StartCartForCustomer();
 
             cart.Add(Product.Of(skuChewingGum, 10), Quantity.Of(1));
             cart.Add(Product.Of(skuAssortedCandies, 5), Quantity.Of(2));
@@ -75,8 +69,7 @@ namespace PlaygroundTests
         [Fact]
         public void CanRemoveItem()
         {
-            var customerId = new EntityId();
-            var cart = new Cart(customerId);
+            var cart = StartCartForCustomer();
             var item = Product.Of(skuChewingGum, 10);
 
             cart.Add(item, Quantity.Of(1));
@@ -86,10 +79,22 @@ namespace PlaygroundTests
         }
 
         [Fact]
+        public void CanRemoveItemBySpecificQuantity()
+        {
+            var cart = StartCartForCustomer();
+            var item = Product.Of(skuChewingGum, 10);
+
+            cart.Add(item, Quantity.Of(3));
+            cart.Remove(item, Quantity.Of(1));
+
+            cart.Items.Count.Should().Be(1);
+            cart.Items.First().Quantity.Should().Be(Quantity.Of(2));
+        }
+
+        [Fact]
         public void CannotCloseCartUnder50Dollars()
         {
-            var customerId = new EntityId();
-            var cart = new Cart(customerId);
+            var cart = StartCartForCustomer();
             var item = Product.Of(skuChewingGum, 10);
 
             cart.Add(item, Quantity.Of(1));
@@ -101,14 +106,19 @@ namespace PlaygroundTests
         [Fact]
         public void CanCloseCartAbove50Dollars()
         {
-            var customerId = new EntityId();
-            var cart = new Cart(customerId);
+            var cart = StartCartForCustomer();
             var item = Product.Of(skuChewingGum, 30);
 
             cart.Add(item, Quantity.Of(2));
             cart.CloseForCheckout();
 
             cart.DomainEvents.Should().ContainItemsAssignableTo<CartClosedForCheckout>();
+        }
+
+        private Cart StartCartForCustomer()
+        {
+            var customerId = new EntityId();
+            return new Cart(customerId);
         }
     }
 }

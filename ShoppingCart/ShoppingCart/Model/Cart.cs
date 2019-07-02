@@ -62,6 +62,15 @@ namespace ShoppingCart.Model
         {
             var existing = items.SingleOrDefault(item => item.Product == product);
 
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i].Product == product)
+                {
+                    items[i] = items[i].Remove(quantity);
+                    return;
+                }
+            }
+
             if (existing != null)
                 existing = existing.Remove(quantity);
         }
