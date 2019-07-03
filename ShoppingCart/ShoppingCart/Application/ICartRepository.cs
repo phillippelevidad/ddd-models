@@ -7,8 +7,10 @@ namespace ShoppingCart.Application
 {
     public interface ICartRepository
     {
-        Task<Maybe<Cart>> GetForCustomerAsync(EntityId customerId);
+        Task<Result> AddAsync(Cart cart);
 
-        Task UpdateAsync(Cart cart);
+        Task<Maybe<Cart>> GetOpenCartForCustomerAsync(EntityId customerId);
+
+        Task<Result> UpdateAsync(Cart cart);
     }
 }

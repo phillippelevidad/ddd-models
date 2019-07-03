@@ -1,6 +1,6 @@
 ﻿namespace Core
 {
-    public abstract class ICommand
+    public interface ICommand
     {
     }
 }
