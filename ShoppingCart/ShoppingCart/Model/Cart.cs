@@ -13,9 +13,12 @@ namespace ShoppingCart.Model
         public Cart(EntityId customerId) : base(customerId)
         {
             CustomerId = customerId;
+            IsClosed = false;
         }
 
         public EntityId CustomerId { get; }
+        public bool IsClosed { get; private set; }
+
         public IReadOnlyList<CartItem> Items => items;
         public decimal TotalAmount => items.Sum(item => item.TotalAmount);
 
@@ -77,6 +80,9 @@ namespace ShoppingCart.Model
 
         public Result CanCloseForCheckout()
         {
+            if (IsClosed)
+                return Result.Fail("The cart is already closed.");
+
             if (TotalAmount < 50m)
                 return Result.Fail("The total amount should be at least 50 dollars in order to proceed to checkout.");
 
@@ -88,6 +94,7 @@ namespace ShoppingCart.Model
             CanCloseForCheckout()
                 .OnFailure(error => throw new Exception(error));
 
+            IsClosed = true;
             AddDomainEvent(new CartClosedForCheckout(this));
         }
 

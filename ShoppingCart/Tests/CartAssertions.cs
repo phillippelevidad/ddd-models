@@ -20,7 +20,7 @@ namespace PlaygroundTests
         }
 
         [Fact]
-        public void CanAddItemToCart()
+        public void CanAddProductToCart()
         {
             var cart = StartCartForCustomer();
 
@@ -67,7 +67,7 @@ namespace PlaygroundTests
         }
 
         [Fact]
-        public void CanRemoveItem()
+        public void CanRemoveProduct()
         {
             var cart = StartCartForCustomer();
             var item = Product.Of(skuChewingGum, 10);
@@ -79,7 +79,7 @@ namespace PlaygroundTests
         }
 
         [Fact]
-        public void CanRemoveItemBySpecificQuantity()
+        public void CanRemoveProductBySpecificQuantity()
         {
             var cart = StartCartForCustomer();
             var item = Product.Of(skuChewingGum, 10);
