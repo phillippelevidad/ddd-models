@@ -8,6 +8,9 @@ namespace ShoppingCart.Model
 {
     public class Cart : AggregateRoot
     {
+        private const int maxQuantityPerProduct = 10;
+        private const decimal minCartAmountForCheckout = 50m;
+
         private readonly List<CartItem> items = new List<CartItem>();
 
         public Cart(EntityId customerId) : base(customerId)
@@ -30,7 +33,7 @@ namespace ShoppingCart.Model
             if (existing != null)
                 newQuantity += existing.Quantity;
 
-            if (newQuantity > 10)
+            if (newQuantity > maxQuantityPerProduct)
                 return Result.Fail("Cannot add more than 10 units of each product.");
 
             return Result.Ok();
@@ -83,7 +86,7 @@ namespace ShoppingCart.Model
             if (IsClosed)
                 return Result.Fail("The cart is already closed.");
 
-            if (TotalAmount < 50m)
+            if (TotalAmount < minCartAmountForCheckout)
                 return Result.Fail("The total amount should be at least 50 dollars in order to proceed to checkout.");
 
             return Result.Ok();
